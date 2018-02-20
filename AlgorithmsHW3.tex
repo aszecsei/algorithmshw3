@@ -1,0 +1,221 @@
+\documentclass{article}
+
+\usepackage[T1]{fontenc}
+
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{enumitem}
+
+\usetikzlibrary{automata,positioning}
+
+%
+% Basic Document Settings
+%
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName}
+\chead{\hmwkClass: \hmwkTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\setlength\parindent{0pt}
+
+%
+% Create Problem Sections
+%
+
+\newcommand{\enterProblemHeader}[1]{
+    \nobreak\extramarks{}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+    \nobreak\extramarks{Problem \arabic{#1} (continued)}{Problem \arabic{#1} continued on next page\ldots}\nobreak{}
+    \stepcounter{#1}
+    \nobreak\extramarks{Problem \arabic{#1}}{}\nobreak{}
+}
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+\nobreak\extramarks{Problem \arabic{homeworkProblemCounter}}{}\nobreak{}
+
+%
+% Homework Problem Environment
+%
+% This environment takes an optional argument. When given, it will adjust the
+% problem counter. This is useful for when the problems given for your
+% assignment aren't sequential. See the last 3 problems of this template for an
+% example.
+%
+\newenvironment{homeworkProblem}[1][-1]{
+    \ifnum#1>0
+        \setcounter{homeworkProblemCounter}{#1}
+    \fi
+    \section{Problem \arabic{homeworkProblemCounter}}
+    \setcounter{partCounter}{1}
+    \enterProblemHeader{homeworkProblemCounter}
+}{
+    \exitProblemHeader{homeworkProblemCounter}
+}
+
+%
+% Homework Details
+%   - Title
+%   - Due date
+%   - Class
+%   - Section/Time
+%   - Instructor
+%   - Author
+%
+
+\newcommand{\hmwkTitle}{Homework\ \#3}
+\newcommand{\hmwkDueDate}{March 1, 2018}
+\newcommand{\hmwkClass}{Design and Analysis of Algorithms}
+\newcommand{\hmwkClassInstructor}{Professor Kasturi Varadarajan}
+\newcommand{\hmwkAuthorName}{\textbf{Alic Szecsei}}
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+    \normalsize\vspace{0.1in}\small{Due\ in\ class\ on\ \hmwkDueDate}\\
+    \vspace{0.1in}\large{\textit{\hmwkClassInstructor}}
+    \vspace{3in}
+}
+
+\author{\hmwkAuthorName}
+\date{}
+
+\renewcommand{\part}[1]{\textbf{\large Part \Alph{partCounter}}\stepcounter{partCounter}\\}
+
+%
+% Various Helper Commands
+%
+
+% Useful for algorithms
+\newcommand{\alg}[1]{\textsc{\bfseries \footnotesize #1}}
+
+% For derivatives
+\newcommand{\deriv}[1]{\frac{\mathrm{d}}{\mathrm{d}x} (#1)}
+
+% For partial derivatives
+\newcommand{\pderiv}[2]{\frac{\partial}{\partial #1} (#2)}
+
+% Integral dx
+\newcommand{\dx}{\mathrm{d}x}
+
+% Alias for the Solution section header
+\newcommand{\solution}{\textbf{\large Solution}}
+
+% Probability commands: Expectation, Variance, Covariance, Bias
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\Bias}{\mathrm{Bias}}
+
+% Set from 1 to N
+\newcommand{\XYZ}[1]{\left\{1,\ldots,{#1}\right\}}
+\newcommand{\Break}{\textbf{break} }
+
+\begin{document}
+
+\maketitle
+
+\pagebreak
+
+\begin{homeworkProblem}
+You and your eight-year-old nephew Elmo decide to play a simple card game. At the beginning of the game, the cards are dealt face up in a long row. Each card is worth a different number of points. After all the cards are dealt, you and Elmo take turns removing either the leftmost or rightmost card from the row, until all the cards are gone. At each turn, you can decide which of the two cards to take. The winner of the game is the player that has collected the most points when the game ends.\\
+
+
+Having never taken an algorithms class, Elmo follows the obvious greedy strategy---when it's his turn, Elmo always takes the card with the higher point value. Your task is to find a strategy that will beat Elmo whenever possible. (It might seem mean to beat up on a little kid like this, but Elmo absolutely hates it when grown-ups let him win.
+
+\begin{enumerate}[label=(\alph*)]
+	\item Prove that you should not also use the greedy strategy. That is, show that there is a game that you can win, but only if you do \emph{not} follow the same greedy strategy as Elmo.
+	\item Describe and analyze an algorithm to determine, given the initial sequence of cards, the maximum number of points that you can collect playing against Elmo.
+\end{enumerate}
+
+\solution\\
+
+\part\\
+
+\part\\
+
+\end{homeworkProblem}
+
+\pagebreak
+
+\begin{homeworkProblem}
+
+A palindrome is any string that is exactly the same as its reversal, like \texttt{I}, or \texttt{DEED}, or \texttt{RACECAR}, or \texttt{A\-MAN\-A\-PLAN\-A\-CAT\-A\-CANAL\-PANAMA}.
+
+\begin{enumerate}[label=(\alph*)]
+	\item Describe and analyze an algorithm to find the length of the \emph{longest subsequence} of a given string that is also a palindrome. For example, the longest palindrome subsequence of \texttt{\underline{M}A\underline{H}\-D\underline{Y}NA\underline{M}IC\-P\underline{RO}G\underline{R}AMZ\-LET\-\underline{M}E\-SHOW\-\underline{Y}OU\-T\underline{H}E\underline{M}} is \texttt{MHYMRORYHM}, so given that string as input, your algorithm should output the number 11. \setcounter{enumi}{2} 
+	\item Any string can be decomposed into a sequence of palindromes. For example, the string \texttt{BUBBA\-SEES\-A\-BANANA} (``Bubba sees a banana.'') can be broken into palindromes in the following ways (and many others):
+	
+	\begin{center}
+	\texttt{BUB} $\bullet$ \texttt{BASEESAB} $\bullet$ \texttt{ANANA}\\
+	\texttt{B} $\bullet$ \texttt{U} $\bullet$ \texttt{BB} $\bullet$ \texttt{A} $\bullet$ \texttt{SEES} $\bullet$ \texttt{ABA} $\bullet$ \texttt{NAN} $\bullet$ \texttt{A}\\
+	\texttt{B} $\bullet$ \texttt{U} $\bullet$ \texttt{BB} $\bullet$ \texttt{A} $\bullet$ \texttt{SEES} $\bullet$ \texttt{A} $\bullet$ \texttt{B} $\bullet$ \texttt{ANANA}\\
+	\texttt{B} $\bullet$ \texttt{U} $\bullet$ \texttt{B} $\bullet$ \texttt{B} $\bullet$ \texttt{A} $\bullet$ \texttt{S} $\bullet$ \texttt{E} $\bullet$ \texttt{E} $\bullet$ \texttt{S} $\bullet$ \texttt{A} $\bullet$ \texttt{B} $\bullet$ \texttt{A} $\bullet$ \texttt{N} $\bullet$ \texttt{ANA}
+	\end{center}
+\end{enumerate}
+
+Describe and analyze an efficient algorithm to find the smallest number of palindromes that make up a given input string. For example, given the input string \texttt{BUBBA\-SEES\-A\-BANANA}, your algorithm would return the integer 3.\\
+
+\solution\\
+
+\part\\
+
+\addtocounter{partCounter}{1}
+\part\\
+
+\end{homeworkProblem}
+
+\pagebreak
+
+\begin{homeworkProblem}
+Suppose we are given a set $L$ of $n$ line segments in the plane, where each segment has one endpoint on the line $y = 0$ and one endpoint on the line $y = 1$, and all $2n$ endpoints are distinct. Describe and analyze an algorithm to compute the largest subset of $L$ in which no pair of segments intersects.\\
+
+\solution\\
+
+
+
+\end{homeworkProblem}
+
+\pagebreak
+
+\begin{homeworkProblem}
+
+Oh, no! You have been appointed as the organizer of Giggle, Inc.'s annual mandatory holiday party! The employees at Giggle are organized into a strict hierarchy, that is, a tree with the company president at the root. The all-knowing oracles in Human Resources have assigned a real number to each employee measuring how ``fun'' the employee is. In order to keep things social, there is one restriction on the guest list: an employee cannot attend the party if their immediate supervisor is also present. On the other hand, the president of the company \emph{must} attend the party, even though she has a negative fun rating; it's her company, after all. Give an algorithm that makes a guest list for the party that maximizes the sum of the ``fun'' ratings of the guests.\\
+
+\solution\\
+
+
+
+\end{homeworkProblem}
+
+\end{document}

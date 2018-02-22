@@ -189,40 +189,41 @@ Thus, you can only win this game by making your first move take the smaller of t
 \begin{algorithm}
 	\caption{Elmo's Card Game}\label{algo:elmosgame}
 	\begin{algorithmic}[1]
-		\State{$memCards \gets$ empty hash map}
 		\Function{Elmo}{$cards[1..n]$}
-			\If{$n = 0$}
-				\State \Return $0$
-			\ElsIf{$n = 1$}
-				\State \Return $cards[1]$
-			\ElsIf{$memCards$ contains $cards$}
-				\State \Return $memCards[cards]$
-			\Else
-				\State $L \gets cards[2..n]$ \Comment Try taking the first card
-				\If{$cards[2] > cards[n]$} \Comment Remove Elmo's card
-					\State remove the first element from $L$
-				\Else
-					\State remove the last element from $L$
-				\EndIf
-				\State $l \gets cards[1] +$ \Call{Elmo}{$L$}
-				\State $R \gets cards[1..n-1]$ \Comment Try taking the last card
-				\If{$cards[1] > cards[n-1]$} \Comment Remove Elmo's card
-					\State remove the first element from $R$
-				\Else
-					\State remove the last element from $R$
-				\EndIf
-				\State $r \gets cards[n] +$ \Call{Elmo}{$R$}
-				\State $x \gets$ the maximum of $l$ and $r$
-				\State Store $x$ in $memCards[cards]$
-				\State \Return $x$
-			\EndIf
+			\State{$memorized \gets$ empty hash map}
+			\State $memorized[$the empty list$] \gets 0$
+			\For{$i \gets 1, n$}
+				\For{$j \gets 1, n-i$}
+					\State $subproblem \gets cards[j..j+i]$
+					\If{$i = 1$}
+						\State $memorized[subproblem] \gets subproblem[1]$
+					\Else
+						\State $L \gets subproblem[2..i]$ \Comment Try taking the first card
+						\If{the first element of $L$ is greater than the last element of $L$}
+							\State remove the first element of $L$
+						\Else
+							\State remove the last element of $L$
+						\EndIf
+						\State $l \gets subproblem[1] + memorized[L]$
+						\State $R \gets subproblem[1..i-1]$ \Comment Try taking the last card
+						\If{the first element of $R$ is greater than the last element of $R$}
+							\State remove the first element of $R$
+						\Else
+							\State remove the last element of $R$
+						\EndIf
+						\State $r \gets subproblem[i] + memorized[R]$
+						\State $memorized[subproblem] \gets$ the maximum of $l$ and $r$
+					\EndIf
+				\EndFor
+			\EndFor
+			\State \Return $memorized[cards]$
 		\EndFunction
 	\end{algorithmic}
 \end{algorithm}
 
-This algorithm tests both options the player has: removing the first card, and removing the last card. The total points for whichever strategy leads to the player having the most points at the end of the game is memoized in a hash map.\\
+This algorithm works from the bottom up to determine all sub-problems. Essentially, at any stage of the game, we may have some $i$ cards, where $i < n$, and all $i$ cards were originally neighbors (since players may only remove cards to the furthest left and furthest right). Therefore, all possible sub-problems are simply combinations of $i$ neighboring cards. For each sub-problem, assuming it is not trivial (no cards remaining or one card remaining), we can perform two calculations: one assuming the player removes a card from the left, and one assuming she removes a card from the right. Whichever of these two routes produces the largest score is stored as the solution to the sub-problem. When all possible sub-problems have been calculated, the algorithm returns the solution to the $n$-sized sub-problem, which is the original problem.\\
 
-To determine the run-time, we can examine the total number of sub-problems. A base case contains $n$ different ``final card''s to be picked up. Adding on to that, there are $n-1$ possible prior states - one for each pair of neighboring cards. We can continue in this manner, until we reach a single possible state - the initial set of $n$ cards - so that we have a total of $\sum_{i=1}^{n} i$ possible sub-problems, which is $O(n^2)$.
+The run-time here is straightforward to analyze; there are $n$ ``layers'' of sub-problems, since we are analyzing games of 1 remaining card, 2 remaining cards, and so on until we have reached the original problem of $n$ remaining cards. For each of these ``layers'', we find all possible collections of neighboring cards; so, in total, we have $\sum\limits_{i = 1}^{n} i$ sub-problems, which leaves us with a runtime of $O(n^2)$.
 
 \end{homeworkProblem}
 

@@ -153,7 +153,6 @@
 \begin{homeworkProblem}
 You and your eight-year-old nephew Elmo decide to play a simple card game. At the beginning of the game, the cards are dealt face up in a long row. Each card is worth a different number of points. After all the cards are dealt, you and Elmo take turns removing either the leftmost or rightmost card from the row, until all the cards are gone. At each turn, you can decide which of the two cards to take. The winner of the game is the player that has collected the most points when the game ends.\\
 
-
 Having never taken an algorithms class, Elmo follows the obvious greedy strategy---when it's his turn, Elmo always takes the card with the higher point value. Your task is to find a strategy that will beat Elmo whenever possible. (It might seem mean to beat up on a little kid like this, but Elmo absolutely hates it when grown-ups let him win.
 
 \begin{enumerate}[label=(\alph*)]
@@ -165,7 +164,65 @@ Having never taken an algorithms class, Elmo follows the obvious greedy strategy
 
 \part\\
 
+Suppose there are a total of 8 cards, with point values ranging from 1 to 8. When dealt, they are arranged like so:
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{ | *{8}{c |} c | }
+		\hline
+		3 & 8 & 7 & 6 & 5 & 4 & 2 & 1 \\
+		\hline
+\end{tabular}
+	\caption{an example game}
+	\label{tab:ExampleGame}
+\end{table}
+
+If you were to play using the greedy strategy, you would first take card 3, while Elmo would take 8, and so on. At the end of the game, you would have $3 + 7 + 5 + 2 = 17$ points, while Elmo would have $8 + 6 + 4 + 1 = 19$ points.\\
+
+However, if you first took card 1, Elmo would take card 3, leaving you to take card 8, and so on, now playing greedily. At the end of the game, you would have $1 + 8 + 6 + 4 = 19$ points, while Elmo would have $3 + 7 + 5 + 2 = 17$ points.\\
+
+Thus, you can only win this game by making your first move take the smaller of the two available cards, as opposed to Elmo's greedy strategy.\\
+
+\pagebreak
 \part\\
+
+\begin{algorithm}
+	\caption{Elmo's Card Game}\label{algo:elmosgame}
+	\begin{algorithmic}[1]
+		\State{$memCards \gets$ empty hash map}
+		\Function{Elmo}{$cards[1..n]$}
+			\If{$n = 0$}
+				\State \Return $0$
+			\ElsIf{$n = 1$}
+				\State \Return $cards[1]$
+			\ElsIf{$memCards$ contains $cards$}
+				\State \Return $memCards[cards]$
+			\Else
+				\State $L \gets cards[2..n]$ \Comment Try taking the first card
+				\If{$cards[2] > cards[n]$} \Comment Remove Elmo's card
+					\State remove the first element from $L$
+				\Else
+					\State remove the last element from $L$
+				\EndIf
+				\State $l \gets cards[1] +$ \Call{Elmo}{$L$}
+				\State $R \gets cards[1..n-1]$ \Comment Try taking the last card
+				\If{$cards[1] > cards[n-1]$} \Comment Remove Elmo's card
+					\State remove the first element from $R$
+				\Else
+					\State remove the last element from $R$
+				\EndIf
+				\State $r \gets cards[n] +$ \Call{Elmo}{$R$}
+				\State $x \gets$ the maximum of $l$ and $r$
+				\State Store $x$ in $memCards[cards]$
+				\State \Return $x$
+			\EndIf
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+This algorithm tests both options the player has: removing the first card, and removing the last card. The total points for whichever strategy leads to the player having the most points at the end of the game is memoized in a hash map.\\
+
+To determine the run-time, we can examine the total number of sub-problems. A base case contains $n$ different ``final card''s to be picked up. Adding on to that, there are $n-1$ possible prior states - one for each pair of neighboring cards. We can continue in this manner, until we reach a single possible state - the initial set of $n$ cards - so that we have a total of $\sum_{i=1}^{n} i$ possible sub-problems, which is $O(n^2)$.
 
 \end{homeworkProblem}
 

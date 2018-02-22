@@ -262,9 +262,9 @@ A palindrome is any string that is exactly the same as its reversal, like \textt
 					\If{$i = 1$}
 						\State $memorized[subproblem] \gets 1$ \Comment A single letter is always a palindrome of length one
 					\Else
-						\State $r \gets$ the maximum of $memorized[subproblem[2..i]]$ and $memorized[subproblem[1..i-1]$
+						\State $r \gets$ the maximum of $memorized[subproblem[2..i]]$ and $memorized[subproblem[1..i-1]]$
 						\If{$subproblem[1] = subproblem[i]$}
-							\State $r \gets$ the maximum of $r$ and $2 + memorized[subproblem[2..i-1]$
+							\State $r \gets$ the maximum of $r$ and $2 + memorized[subproblem[2..i-1]]$
 						\EndIf
 						\State $memorized[subproblem] \gets r$
 					\EndIf

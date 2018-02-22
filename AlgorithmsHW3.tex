@@ -243,16 +243,44 @@ A palindrome is any string that is exactly the same as its reversal, like \textt
 	\texttt{B} $\bullet$ \texttt{U} $\bullet$ \texttt{BB} $\bullet$ \texttt{A} $\bullet$ \texttt{SEES} $\bullet$ \texttt{A} $\bullet$ \texttt{B} $\bullet$ \texttt{ANANA}\\
 	\texttt{B} $\bullet$ \texttt{U} $\bullet$ \texttt{B} $\bullet$ \texttt{B} $\bullet$ \texttt{A} $\bullet$ \texttt{S} $\bullet$ \texttt{E} $\bullet$ \texttt{E} $\bullet$ \texttt{S} $\bullet$ \texttt{A} $\bullet$ \texttt{B} $\bullet$ \texttt{A} $\bullet$ \texttt{N} $\bullet$ \texttt{ANA}
 	\end{center}
+	Describe and analyze an efficient algorithm to find the smallest number of palindromes that make up a given input string. For example, given the input string \texttt{BUBBA\-SEES\-A\-BANANA}, your algorithm would return the integer 3.
 \end{enumerate}
-
-Describe and analyze an efficient algorithm to find the smallest number of palindromes that make up a given input string. For example, given the input string \texttt{BUBBA\-SEES\-A\-BANANA}, your algorithm would return the integer 3.\\
 
 \solution\\
 
 \part\\
 
+\begin{algorithm}
+	\caption{Longest Palindrome Subsequence}\label{algo:longpalinsubsq}
+	\begin{algorithmic}[1]
+		\Function{LPS}{$text[1..n]$}
+			\State{$memorized \gets$ empty hash map}
+			\State $memorized[$the empty list$] \gets 0$
+			\For{$i \gets 1, n$}
+				\For{$j \gets 1, n-i$}
+					\State $subproblem \gets text[j..j+i]$
+					\If{$i = 1$}
+						\State $memorized[subproblem] \gets 1$ \Comment A single letter is always a palindrome of length one
+					\Else
+						\State $r \gets$ the maximum of $memorized[subproblem[2..i]]$ and $memorized[subproblem[1..i-1]$
+						\If{$subproblem[1] = subproblem[i]$}
+							\State $r \gets$ the maximum of $r$ and $2 + memorized[subproblem[2..i-1]$
+						\EndIf
+						\State $memorized[subproblem] \gets r$
+					\EndIf
+				\EndFor
+			\EndFor
+			\State \Return $memorized[text]$
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+This solution is similar to the previous algorithm. Each subproblem is a set of neighboring characters in the string, with $i$ ``layers'' of substring lengths and $1+n-i$ substrings of length $i$. Using the previous summation, we see that the runtime is $O(n^2)$.\\
+
 \addtocounter{partCounter}{1}
 \part\\
+
+
 
 \end{homeworkProblem}
 

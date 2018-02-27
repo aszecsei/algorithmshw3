@@ -280,7 +280,50 @@ This solution is similar to the previous algorithm. Each subproblem is a set of 
 \addtocounter{partCounter}{1}
 \part\\
 
+\begin{algorithm}
+	\caption{Smallest Number of Palindromes}\label{algo:smallpalin}
+	\begin{algorithmic}[1]
+		\Function{SmallestNumPalindromes}{$text[1..n]$}
+			\State{$memorized \gets$ empty hash map}
+			\State{$palindromes \gets$ empty hash map}
+			\State $memorized[$the empty list$] \gets 0$
+			\State $palindromes[$the empty list$] \gets$ True
+			\For{$i \gets 1, n$} \Comment First, calculate all palindromes
+				\For{$j \gets 1, n-i$}
+					\State $subproblem \gets text[j..j+i]$
+					\If{$i = 1$}
+						\State $palindromes[subproblem] \gets$ True
+					\ElsIf{$subproblem[0] \neq subproblem[j+i]$}
+						\State $palindromes[subproblem] \gets$ False
+					\Else
+						\State $palindromes[subproblem] \gets palindromes[subproblem[2..j+i-1]]$
+					\EndIf
+				\EndFor
+			\EndFor
+			\For{$i \gets 1, n$} \Comment Now we calculate the actual number of sub-palindromes
+				\For{$j \gets 1, n-i$}
+					\State $subproblem \gets text[j..j+i]$
+					\If{$i = 1$}
+						\State $memorized[subproblem] \gets 1$
+					\Else
+						\State $min \gets i$ \Comment The largest value here assumes there are no sub-palindromes
+						\For{$k \gets 1, i$}
+							\If{$palindromes[subproblem[1..k]]$}
+								\State $min \gets$ the minumum of $min$ and $1 + memorized[subproblem[k..i]]$
+							\EndIf
+						\EndFor
+						\State $memorized[subproblem] \gets min$
+					\EndIf
+				\EndFor
+			\EndFor
+			\State \Return $memorized[text]$
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
 
+This solution has a few notable differences from the previous algorithm. First, we make sure to store whether or not any sub-string is a palindrome, which can be done in $O(n^2)$ time, using a similar strategy as the last few algorithms.\\
+
+However, the second half of the solution is where things get more complex. For each substring, we wish to determine the smallest number of palindromes that can make up that sub-string; to do this, we attempt to find palindromes at the beginning of the sub-string, and then find how many palindromes it takes to fill in the \emph{rest} of the sub-string. As we have $O(n^2)$ sub-strings and we use an additional loop to determine beginning palindromes, the final running time for this second half of the solution is $O(n^3)$. Therefore, our final running time is $O(n^3)$.
 
 \end{homeworkProblem}
 

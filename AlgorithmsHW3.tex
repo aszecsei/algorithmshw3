@@ -339,7 +339,7 @@ Suppose we are given a set $L$ of $n$ line segments in the plane, where each seg
 	\begin{algorithmic}[1]
 		\Function{LargestSubsetNonIntersecting}{$set[1..n]$}
 			\State \Call{Sort}{$set[1..n]$} \Comment sort by the $x$-value of the first point
-			\State $set[0] \gets (-\infty, -\infty)$
+			\State $set[0] \gets (-\infty, -\infty)$ \Comment sentinel value
 			\For{$i \gets 1, n$} \Comment Base cases
 				\State $memorized[i, n+1] \gets$ an empty list
 			\EndFor
@@ -390,8 +390,7 @@ Oh, no! You have been appointed as the organizer of Giggle, Inc.'s annual mandat
 				\State $i \gets i + 1$
 			\EndWhile
 			\State reverse $queue$
-			\State $n \gets$ the length of $queue$
-			\For{$i \gets 1, n$}
+			\For{$i \gets 1,$ the length of $queue$}
 				\State $current \gets queue[i]$
 				\State $maxA \gets current.fun$
 				\State $listA \gets [current]$ \Comment if the root is included in the party
@@ -402,16 +401,37 @@ Oh, no! You have been appointed as the organizer of Giggle, Inc.'s annual mandat
 					\State $listB \gets listB + list[child]$ \Comment the children can only be included if the root is not
 					\ForAll{$grandchild$ in $child.children$}
 						\State $maxA \gets maxA + fun[grandchild]$
+						\State $listA \gets listA + list[grandchild]$
 					\EndFor
 				\EndFor
+				\If{$maxA > maxB$}
+					\State $fun[current] \gets maxA$
+					\State $list[current] \gets listA$
+				\Else
+					\State $fun[current] \gets maxB$
+					\State $list[current] \gets listB$
+				\EndIf
 			\EndFor
+			\State $returnList \gets [root]$
+			\ForAll{$child$ in $root.children$}
+				\ForAll{$grandchild$ in $child.children$}
+					\State $returnList \gets returnList + list[grandchild]$
+				\EndFor
+			\EndFor
+			\State \Return $returnList$
 		\EndFunction
 	\end{algorithmic}
 \end{algorithm}
 
 First, we perform a breadth-first search of the tree. Then, we reverse the resulting list of nodes. This gives us a list which starts with leaf nodes, and then reaches the root at the very end of the list.\\
 
-Next, we can go through the list and define sub-problems.\\
+Next, we can go through the list and define sub-problems. Each sub-problem has a root node, $current$, and two choices: either $current$ should be included in the party, or not. If $current$ is not included in the party, we can examine its children (if there are any) to see the resulting maximum fun value; otherwise, we must look at $current$'s grandchildren to determine the maximum possible fun value. Either way, we can determine which strategy would lead to the most fun list of attendees.\\
+
+At the conclusion of our algorithm, since the boss \emph{must} attend the party, and our algorithm so far supposed that the $current$ root might not attend the party, we include her in a separate $returnList$ and then append the most fun guest lists we have for each of her supervisee's supervisees (as her direct supervisees may never attend the party, according to Giggle, Inc.'s stringent attendance policies).\\
+
+The breadth-first traversal portion of the algorithm is relatively minor, having a linear-time complexity. THe bulk of our algorithm's complexity lies in the subsequent calculations.\\
+
+Since there are $n$ sub-problems, and the algorithm requires \emph{at most} $n$ calculations per sub-problem (in the case that all $n$ nodes are either children or grandchildren of the node), we can safely say that the algorithm has a worst-case runtime of $O(n^2)$.
 
 \end{homeworkProblem}
 

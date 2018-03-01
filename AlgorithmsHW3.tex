@@ -344,7 +344,7 @@ Suppose we are given a set $L$ of $n$ line segments in the plane, where each seg
 				\State $memorized[i, n+1] \gets$ an empty list
 			\EndFor
 			\For{$j \gets n, 1$} \Comment Now we calculate the longest increasing subsequence
-				\For{$i \gets 0, j$}
+				\For{$i \gets 0, j-1$}
 					\If{$set[i].b > set[j].b$}
 						\State $memorized[i,j] \gets memorized[i,j+1]$
 					\Else

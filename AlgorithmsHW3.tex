@@ -223,7 +223,7 @@ Thus, you can only win this game by making your first move take the smaller of t
 
 This algorithm works from the bottom up to determine all sub-problems. Essentially, at any stage of the game, we may have some $i$ cards, where $i < n$, and all $i$ cards were originally neighbors (since players may only remove cards to the furthest left and furthest right). Therefore, all possible sub-problems are simply combinations of $i$ neighboring cards. For each sub-problem, assuming it is not trivial (no cards remaining or one card remaining), we can perform two calculations: one assuming the player removes a card from the left, and one assuming she removes a card from the right. Whichever of these two routes produces the largest score is stored as the solution to the sub-problem. When all possible sub-problems have been calculated, the algorithm returns the solution to the $n$-sized sub-problem, which is the original problem.\\
 
-The run-time here is straightforward to analyze; there are $n$ ``layers'' of sub-problems, since we are analyzing games of 1 remaining card, 2 remaining cards, and so on until we have reached the original problem of $n$ remaining cards. For each of these ``layers'', we find all possible collections of neighboring cards; so, in total, we have $\sum\limits_{i = 1}^{n} i$ sub-problems, which leaves us with a runtime of $O(n^2)$.
+The run-time here is straightforward to analyze; there are $n$ ``layers'' of sub-problems, since we are analyzing games of 1 remaining card, 2 remaining cards, and so on until we have reached the original problem of $n$ remaining cards. For each of these ``layers'', we find all possible collections of neighboring cards; so, in total, we have $\sum\limits_{i = 1}^{n} i = \frac{n(n+1)}{2}$ sub-problems, which leaves us with a runtime of $O(n^2)$.
 
 \end{homeworkProblem}
 
@@ -361,7 +361,7 @@ Here we attempt to find the largest subset of non-intersecting line segments. To
 
 Now, the problem transforms into a modified longest increasing subsequence; we simply must test that the second point of each line segment is increasing, and we are guaranteed that no line segments will intersect.\\
 
-As sorting can be done in $n\log n$ time, and the longest increasing subsequence has $O(n^2)$ runtime, our algorithm has a runtime of $O(n^2)$.\\
+As sorting can be done in $n\log n$ time, and the longest increasing subsequence has $O(n^2)$ runtime (as seen in the notes), our algorithm has a runtime of $O(n^2)$.\\
 
 \end{homeworkProblem}
 
@@ -381,21 +381,18 @@ Oh, no! You have been appointed as the organizer of Giggle, Inc.'s annual mandat
 			\State $i \gets 1$
 			\While{$i \leq$ the length of $queue$}
 				\State $current \gets queue[i]$
-				\If{$current.left$ exists}
-					\State push $current.left$ onto $queue$
-				\EndIf
-				\If{$current.right$ exists}
-					\State push $current.right$ onto $queue$
-				\EndIf
+				\ForAll{$child$ in $current.children$}
+					\State push $child$ onto $queue$
+				\EndFor
 				\State $i \gets i + 1$
 			\EndWhile
 			\State reverse $queue$
 			\For{$i \gets 1,$ the length of $queue$}
 				\State $current \gets queue[i]$
 				\State $maxA \gets current.fun$
-				\State $listA \gets [current]$ \Comment if the root is included in the party
+				\State $listA \gets [current]$ \Comment route $A$: if the root is included in the party
 				\State $maxB \gets 0$
-				\State $listB \gets []$ \Comment if the root is not included in the party
+				\State $listB \gets []$ \Comment route $B$: if the root is not included in the party
 				\ForAll{$child$ in $current.children$}
 					\State $maxB \gets maxB + fun[child]$
 					\State $listB \gets listB + list[child]$ \Comment the children can only be included if the root is not
@@ -404,7 +401,7 @@ Oh, no! You have been appointed as the organizer of Giggle, Inc.'s annual mandat
 						\State $listA \gets listA + list[grandchild]$
 					\EndFor
 				\EndFor
-				\If{$maxA > maxB$}
+				\If{$maxA > maxB$} \Comment use whichever route, $A$ or $B$, provides the most fun
 					\State $fun[current] \gets maxA$
 					\State $list[current] \gets listA$
 				\Else
@@ -412,7 +409,7 @@ Oh, no! You have been appointed as the organizer of Giggle, Inc.'s annual mandat
 					\State $list[current] \gets listB$
 				\EndIf
 			\EndFor
-			\State $returnList \gets [root]$
+			\State $returnList \gets [root]$ \Comment $returnList$ contains the final guest list
 			\ForAll{$child$ in $root.children$}
 				\ForAll{$grandchild$ in $child.children$}
 					\State $returnList \gets returnList + list[grandchild]$
@@ -423,13 +420,13 @@ Oh, no! You have been appointed as the organizer of Giggle, Inc.'s annual mandat
 	\end{algorithmic}
 \end{algorithm}
 
-First, we perform a breadth-first search of the tree. Then, we reverse the resulting list of nodes. This gives us a list which starts with leaf nodes, and then reaches the root at the very end of the list.\\
+First, we perform a breadth-first traversal of the tree. Then, we reverse the resulting list of nodes. This gives us a list which starts with leaf nodes, and then reaches the root at the very end of the list.\\
 
 Next, we can go through the list and define sub-problems. Each sub-problem has a root node, $current$, and two choices: either $current$ should be included in the party, or not. If $current$ is not included in the party, we can examine its children (if there are any) to see the resulting maximum fun value; otherwise, we must look at $current$'s grandchildren to determine the maximum possible fun value. Either way, we can determine which strategy would lead to the most fun list of attendees.\\
 
 At the conclusion of our algorithm, since the boss \emph{must} attend the party, and our algorithm so far supposed that the $current$ root might not attend the party, we include her in a separate $returnList$ and then append the most fun guest lists we have for each of her supervisee's supervisees (as her direct supervisees may never attend the party, according to Giggle, Inc.'s stringent attendance policies).\\
 
-The breadth-first traversal portion of the algorithm is relatively minor, having a linear-time complexity. THe bulk of our algorithm's complexity lies in the subsequent calculations.\\
+The breadth-first traversal portion of the algorithm is relatively minor, having a linear-time complexity. The bulk of our algorithm's complexity lies in the subsequent calculations.\\
 
 Since there are $n$ sub-problems, and the algorithm requires \emph{at most} $n$ calculations per sub-problem (in the case that all $n$ nodes are either children or grandchildren of the node), we can safely say that the algorithm has a worst-case runtime of $O(n^2)$.
 

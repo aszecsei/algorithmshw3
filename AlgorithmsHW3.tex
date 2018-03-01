@@ -334,7 +334,33 @@ Suppose we are given a set $L$ of $n$ line segments in the plane, where each seg
 
 \solution\\
 
+\begin{algorithm}
+	\caption{Largest subset of non-intersecting line segments}\label{algo:smallpalin}
+	\begin{algorithmic}[1]
+		\Function{LargestSubsetNonIntersecting}{$set[1..n]$}
+			\State \Call{Sort}{$set[1..n]$} \Comment sort by the $x$-value of the first point
+			\For{$i \gets 1, n$} \Comment Base cases
+				\State $memorized[i, n+1] \gets$ an empty list
+			\EndFor
+			\For{$j \gets n, 1$} \Comment Now we calculate the longest increasing subsequence
+				\For{$i \gets 1, j$}
+					\If{$set[i].b > set[j].b$}
+						\State $memorized[i,j] \gets memorized[i,j+1]$
+					\Else
+						\State $memorized[i,j] \gets$ whichever of $memorized[i,j+1]$ and $[set[j]] + memorized[j, j+1]$ has the longer length
+					\EndIf
+				\EndFor
+			\EndFor
+			\State \Return $memorized[0,1]$
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
 
+Here we attempt to find the largest subset of non-intersecting line segments. To do this, we first sort the list of non-intersecting line segments by the $x$-value of the first point. Now, we need only examine the $x$-value of the second point to determine if two line segments intersect; we are guaranteed that, for some line segments $X_1$ and $X_2$, if $X_2$ is sorted after $X_1$, then the only way $X_1$ and $X_2$ can intersect is if the second point of $X_1$ is greater than the second point of $X_2$.\\
+
+Now, the problem transforms into a modified longest increasing subsequence; we simply must test that the second point of each line segment is increasing, and we are guaranteed that no line segments will intersect.\\
+
+As sorting can be done in $n\log n$ time, and the longest increasing subsequence has $O(n^2)$ runtime, our algorithm has a runtime of $O(n^2)$.\\
 
 \end{homeworkProblem}
 

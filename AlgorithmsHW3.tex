@@ -340,7 +340,7 @@ Suppose we are given a set $L$ of $n$ line segments in the plane, where each seg
 		\Function{LargestSubsetNonIntersecting}{$set[1..n]$}
 			\State \Call{Sort}{$set[1..n]$} \Comment sort by the $x$-value of the first point
 			\State $set[0] \gets (-\infty, -\infty)$ \Comment sentinel value
-			\For{$i \gets 1, n$} \Comment Base cases
+			\For{$i \gets 0, n$} \Comment Base cases
 				\State $memorized[i, n+1] \gets$ an empty list
 			\EndFor
 			\For{$j \gets n, 1$} \Comment Now we calculate the longest increasing subsequence

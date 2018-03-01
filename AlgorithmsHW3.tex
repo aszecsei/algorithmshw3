@@ -309,7 +309,7 @@ This solution is similar to the previous algorithm. Each subproblem is a set of 
 						\State $min \gets i$ \Comment The largest value here assumes there are no sub-palindromes
 						\For{$k \gets 1, i$}
 							\If{$palindromes[subproblem[1..k]]$}
-								\State $min \gets$ the minumum of $min$ and $1 + memorized[subproblem[k..i]]$
+								\State $min \gets$ the minimum of $min$ and $1 + memorized[subproblem[k..i]]$
 							\EndIf
 						\EndFor
 						\State $memorized[subproblem] \gets min$
@@ -339,11 +339,12 @@ Suppose we are given a set $L$ of $n$ line segments in the plane, where each seg
 	\begin{algorithmic}[1]
 		\Function{LargestSubsetNonIntersecting}{$set[1..n]$}
 			\State \Call{Sort}{$set[1..n]$} \Comment sort by the $x$-value of the first point
+			\State $set[0] \gets (-\infty, -\infty)$
 			\For{$i \gets 1, n$} \Comment Base cases
 				\State $memorized[i, n+1] \gets$ an empty list
 			\EndFor
 			\For{$j \gets n, 1$} \Comment Now we calculate the longest increasing subsequence
-				\For{$i \gets 1, j$}
+				\For{$i \gets 0, j$}
 					\If{$set[i].b > set[j].b$}
 						\State $memorized[i,j] \gets memorized[i,j+1]$
 					\Else
@@ -372,7 +373,45 @@ Oh, no! You have been appointed as the organizer of Giggle, Inc.'s annual mandat
 
 \solution\\
 
+\begin{algorithm}
+	\caption{Most fun party attendance}\label{algo:partytime}
+	\begin{algorithmic}[1]
+		\Function{MostFunParty}{$root$}
+			\State $queue \gets [root]$ \Comment Do a breadth-first traversal
+			\State $i \gets 1$
+			\While{$i \leq$ the length of $queue$}
+				\State $current \gets queue[i]$
+				\If{$current.left$ exists}
+					\State push $current.left$ onto $queue$
+				\EndIf
+				\If{$current.right$ exists}
+					\State push $current.right$ onto $queue$
+				\EndIf
+				\State $i \gets i + 1$
+			\EndWhile
+			\State reverse $queue$
+			\State $n \gets$ the length of $queue$
+			\For{$i \gets 1, n$}
+				\State $current \gets queue[i]$
+				\State $maxA \gets current.fun$
+				\State $listA \gets [current]$ \Comment if the root is included in the party
+				\State $maxB \gets 0$
+				\State $listB \gets []$ \Comment if the root is not included in the party
+				\ForAll{$child$ in $current.children$}
+					\State $maxB \gets maxB + fun[child]$
+					\State $listB \gets listB + list[child]$ \Comment the children can only be included if the root is not
+					\ForAll{$grandchild$ in $child.children$}
+						\State $maxA \gets maxA + fun[grandchild]$
+					\EndFor
+				\EndFor
+			\EndFor
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
 
+First, we perform a breadth-first search of the tree. Then, we reverse the resulting list of nodes. This gives us a list which starts with leaf nodes, and then reaches the root at the very end of the list.\\
+
+Next, we can go through the list and define sub-problems.\\
 
 \end{homeworkProblem}
 
